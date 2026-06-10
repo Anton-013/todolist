@@ -17,7 +17,11 @@ export const useTasksDnD = ({ tasks, todolistId }: { tasks: DomainTask[] | undef
 
         if (sourceIndex === newIndex) return
 
-        const putAfterItemId = newIndex > 0 ? tasks[newIndex - 1]?.id : null
+        const newTasks = [...tasks]
+        const [movedTask] = newTasks.splice(sourceIndex, 1)
+        newTasks.splice(newIndex, 0, movedTask)
+
+        const putAfterItemId = newIndex > 0 ? newTasks[newIndex - 1]?.id : null
 
         reorderTask({
             todolistId,
