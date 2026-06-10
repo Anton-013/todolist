@@ -18,11 +18,15 @@ import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import styles from "./Login.module.css"
 import { useState } from "react"
 import { useGetCaptchaUrlQuery } from "@/features/captcha/api/captchaApi"
+import { IconButton, InputAdornment } from "@mui/material"
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export const Login = () => {
   const themeMode = useAppSelector(selectThemeMode)
 
   const [showCaptcha, setShowCaptcha] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const { data: CaptchaData, refetch: refetchCaptcha } = useGetCaptchaUrlQuery(undefined, { skip: !showCaptcha })
 
@@ -96,10 +100,20 @@ export const Login = () => {
             <TextField label="Email" margin="normal" error={!!errors.email} {...register("email")} />
             {errors.email && <span className={styles.errorMessage}>{errors.email.message}</span>}
             <TextField
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               label="Password"
               margin="normal"
               error={!!errors.password}
+              slotProps={{
+                input: {
+                  endAdornment:
+                    <InputAdornment position="end" >
+                      <IconButton onClick={() => setShowPassword(prev => !prev)}>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>,
+                },
+              }}
               {...register("password")}
             />
             {showCaptcha && (
